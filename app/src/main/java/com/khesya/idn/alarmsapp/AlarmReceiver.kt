@@ -5,10 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.icu.number.IntegerWidth
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
@@ -18,7 +16,6 @@ import androidx.core.content.ContextCompat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -64,7 +61,13 @@ class AlarmReceiver : BroadcastReceiver() {
             .setContentTitle(title)
             .setContentText(message)
             .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setVibrate(
+                longArrayOf(
+                    1000,
+                    1000,
+                    1000,
+                    1000,
+                    1000))
             .setSound(alarmSound)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -90,7 +93,6 @@ class AlarmReceiver : BroadcastReceiver() {
         Log.e("ONE TIME", "$date $time")
         val dateArray = date.split("-").toTypedArray()
         val timeArray = time.split(":").toTypedArray()
-
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, Integer.parseInt(dateArray[0]))
         calendar.set(Calendar.MONTH, Integer.parseInt(dateArray[1]) - 1)
@@ -130,13 +132,13 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        val requiresCode = when (type){
+        val requestCode = when (type){
             TYPE_ONE_TIME -> ID_ONETIME
             TYPE_REPEATING -> ID_REPEATING
             else -> Log.i("Cancel Alarm", "cancelAlarm : Unknown type of alarm")
         }
 
-        val pendingIntent = PendingIntent.getBroadcast(context, requiresCode, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, 0)
         pendingIntent.cancel()
         alarmManager.cancel(pendingIntent)
         if (type == TYPE_ONE_TIME){

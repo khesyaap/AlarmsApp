@@ -8,8 +8,8 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.khesya.idn.alarmapp.R
-import com.khesya.idn.alarmapp.room.Alarm
+import com.khesya.idn.alarmsapp.R
+import com.khesya.idn.alarmsapp.room.Alarm
 import kotlinx.android.synthetic.main.item_row_reminder_alarm.view.*
 
 class AlarmAdapter() : RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder>(){
@@ -26,13 +26,13 @@ class AlarmAdapter() : RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder>(){
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmAdapter.AlarmViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
         return AlarmViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_row_reminder_alarm,parent,false))
     }
 
-    override fun onBindViewHolder(holder: AlarmAdapter.AlarmViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
         val alarm = alarms[position]
         holder.view.item_time_alarm.text = alarm.time
         holder.view.item_date_alarm.text = alarm.date

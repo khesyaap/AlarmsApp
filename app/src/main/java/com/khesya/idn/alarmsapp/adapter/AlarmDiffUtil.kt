@@ -1,7 +1,7 @@
 package com.khesya.idn.alarmsapp.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.khesya.idn.alarmapp.room.Alarm
+import com.khesya.idn.alarmsapp.room.Alarm
 
 
 class AlarmDiffUtil(private val oldList: List<Alarm>, private val newList: List<Alarm>) : DiffUtil.Callback(){

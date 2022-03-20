@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.khesya.idn.alarmapp.adapter.AlarmAdapter
-import com.khesya.idn.alarmapp.room.AlarmDB
+import com.khesya.idn.alarmsapp.adapter.AlarmAdapter
+import com.khesya.idn.alarmsapp.room.AlarmDB
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        alarmReceiver = AlarmReceiver()
+
         initTimeToday()
         initDateToday()
         initAlarmType()
@@ -47,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         rv_reminder_alarm.apply{
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = alarmAdapter
-
             swipeToDelete(this)
         }
     }
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTimeToday() {
         val timeNow = Calendar.getInstance()
-        val timeFormat = SimpleDateFormat("HH:mm")
+        val timeFormat = SimpleDateFormat("HH:mm",Locale.getDefault())
         val formattedTime = timeFormat.format(timeNow.time)
 
         tv_time_today.text = formattedTime

@@ -3,10 +3,11 @@ package com.khesya.idn.alarmsapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.khesya.idn.alarmapp.databinding.ActivityMainBinding
-import com.khesya.idn.alarmapp.fragment.TimePickerFragment
-import com.khesya.idn.alarmapp.room.Alarm
-import com.khesya.idn.alarmapp.room.AlarmDB
+import com.khesya.idn.alarmsapp.databinding.ActivityMainBinding
+import com.khesya.idn.alarmsapp.fragment.TimePickerFragment
+import com.khesya.idn.alarmsapp.room.Alarm
+import com.khesya.idn.alarmsapp.room.AlarmDB
+import kotlinx.android.synthetic.main.activity_one_time_alarm.*
 import kotlinx.android.synthetic.main.activity_repeating_alarm.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,12 +15,11 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener, TimePickerFragment.DialogTimeListener {
+class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener,
+    TimePickerFragment.DialogTimeListener {
 
     private var binding : ActivityMainBinding? = null
-
     private lateinit var alarmReceiver: AlarmReceiver
-
     val db by lazy{AlarmDB (this)}
 
     companion object{
@@ -27,11 +27,12 @@ class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener, TimePi
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_repeating_alarm)
 
         btn_set_time_repeating.setOnClickListener(this)
-
         btn_add_set_repeating_alarm.setOnClickListener(this)
+        btn_cancel_repeating_alarm.setOnClickListener(this)
 
         alarmReceiver = AlarmReceiver()
     }
@@ -45,7 +46,6 @@ class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener, TimePi
             R.id.btn_add_set_repeating_alarm -> {
                 val repeatTime = tv_repeating_time.text.toString()
                 val repeatMessage = et_note_repeating.text.toString()
-
                 alarmReceiver.setRepeatingAlarm(
                     this, AlarmReceiver.TYPE_REPEATING,
                     repeatTime,
@@ -54,10 +54,19 @@ class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener, TimePi
 
                 CoroutineScope(Dispatchers.IO).launch {
                     db.alarmDao().AddAlarm(
-                        Alarm(0, repeatTime, "Repeating Alarm", repeatMessage, AlarmReceiver.TYPE_REPEATING)
+                        Alarm(0,
+                            repeatTime,
+                            "Repeating Alarm",
+                            repeatMessage,
+                            AlarmReceiver.TYPE_REPEATING
+                        )
                     )
                     finish()
                 }
+            }
+            R.id.btn_cancel_repeating_alarm -> {
+                onBackPressed()
+                finish()
             }
         }
     }
@@ -70,7 +79,8 @@ class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener, TimePi
         val timeFormatRepeating = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         when(tag){
-            TIME_PICKER_REPEAT_TAG -> tv_repeating_time.text = timeFormatRepeating.format(calendar.time)
+            TIME_PICKER_REPEAT_TAG -> tv_repeating_time.text =
+                timeFormatRepeating.format(calendar.time)
             else -> {
 
             }
